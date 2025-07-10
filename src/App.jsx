@@ -9,7 +9,7 @@ function ParticleSphere() {
   const mouseRef = useRef(new THREE.Vector2(-999, -999));
   const { size, camera } = useThree();
 
-  const count = 1000;
+  const count = 850;
   const radius = 2;
 
   const { positions, opacities, velocities } = useMemo(() => {
@@ -54,12 +54,13 @@ function ParticleSphere() {
       const particle = new THREE.Vector3(pos[i3], pos[i3 + 1], pos[i3 + 2]);
       const dist = particle.distanceTo(mousePos);
 
-      if (dist < 3 && opa[i] > 0.2) {
-        const dir = particle.clone().sub(mousePos).normalize();
-        vel[i3] += dir.x * 0.2;
-        vel[i3 + 1] += dir.y * 0.2;
-        vel[i3 + 2] += dir.z * 0.2;
-      }
+     if (dist < 1.8) {
+  const dir = particle.clone().sub(mousePos).normalize();
+  const force = 0.3 / (dist * dist + 0.2);
+  vel[i3] += dir.x * force;
+  vel[i3 + 1] += dir.y * force;
+  vel[i3 + 2] += dir.z * force;
+}
 
       pos[i3] += vel[i3];
       pos[i3 + 1] += vel[i3 + 1];
@@ -89,30 +90,49 @@ function ParticleSphere() {
     pointsRef.current.geometry.attributes.opacity.needsUpdate = true;
   });
 
-  useEffect(() => {
-    const handlePointer = (x, y) => {
-      mouseRef.current.x = x;
-      mouseRef.current.y = y;
-    };
+useEffect(() => {
+  const handlePointer = (x, y) => {
+    mouseRef.current.x = x;
+    mouseRef.current.y = y;
+  };
 
-    const handleMouseMove = (e) => handlePointer(e.clientX, e.clientY);
-    const handleTouchMove = (e) => {
-      if (e.touches.length > 0) {
-        handlePointer(e.touches[0].clientX, e.touches[0].clientY);
-      }
-    };
+  const handleMouseMove = (e) => {
+    const rect = document.body.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    handlePointer(x, y);
+  };
 
-    window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('touchmove', handleTouchMove, { passive: true });
+  const handleTouchMove = (e) => {
+    if (e.touches.length > 0) {
+      const touch = e.touches[0];
+      const rect = document.body.getBoundingClientRect();
+      const x = touch.clientX - rect.left;
+      const y = touch.clientY - rect.top;
+      handlePointer(x, y);
+    }
+  };
 
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('touchmove', handleTouchMove);
-    };
-  }, []);
+  // 👇 追加：タッチ時に画面スクロールを防ぐ
+  const preventTouchScroll = (e) => {
+    if (e.touches.length === 1) e.preventDefault();
+  };
+
+  window.addEventListener('mousemove', handleMouseMove);
+  window.addEventListener('touchmove', handleTouchMove, { passive: false });
+  window.addEventListener('touchstart', preventTouchScroll, { passive: false });
+
+  return () => {
+    window.removeEventListener('mousemove', handleMouseMove);
+    window.removeEventListener('touchmove', handleTouchMove);
+    window.removeEventListener('touchstart', preventTouchScroll);
+  };
+}, []);
+
+
 
   const uniforms = useMemo(() => ({
-    size: { value: 4.0 },
+    size: { value: 6.0 },
   }), []);
 
   const vertexShader = `
@@ -165,12 +185,16 @@ function ParticleSphere() {
 export default function App() {
   return (
     <Canvas
-      camera={{ position: [0, 0, 6], fov: 75 }}
-      gl={{ alpha: true }}
-    >
-      <ambientLight />
+  camera={{ position: [0, 0, 6], fov: 75 }}
+  gl={{ alpha: true }}
+  style={{ background: 'transparent' }} 
+>
+
+      
       <ParticleSphere />
-      <OrbitControls />
+    <OrbitControls enableZoom={false} />
+
+
     </Canvas>
   );
 }

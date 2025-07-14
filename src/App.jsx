@@ -49,42 +49,53 @@ function ParticleSphere() {
     const dir = vector.sub(camera.position).normalize();
     const mousePos = camera.position.clone().add(dir.multiplyScalar(4));
 
-    for (let i = 0; i < count; i++) {
-      const i3 = i * 3;
-      const particle = new THREE.Vector3(pos[i3], pos[i3 + 1], pos[i3 + 2]);
-      const dist = particle.distanceTo(mousePos);
+   for (let i = 0; i < count; i++) {
+  const i3 = i * 3;
+  const particle = new THREE.Vector3(pos[i3], pos[i3 + 1], pos[i3 + 2]);
+  const dist = particle.distanceTo(mousePos);
 
-     if (dist < 1.8) {
-  const dir = particle.clone().sub(mousePos).normalize();
-  const force = 0.3 / (dist * dist + 0.2);
-  vel[i3] += dir.x * force;
-  vel[i3 + 1] += dir.y * force;
-  vel[i3 + 2] += dir.z * force;
+  // 弾く処理（近づいたら反発）
+  if (dist < 1.2) {
+    const dir = particle.clone().sub(mousePos).normalize();
+    const force = 0.5 / (dist * dist + 0.2);
+    vel[i3] += dir.x * force;
+    vel[i3 + 1] += dir.y * force;
+    vel[i3 + 2] += dir.z * force;
+  }
+
+  // 👇 中央への吸引（透明度が下がった粒子にのみ）
+  if (opa[i] < 0.3) {
+    const toCenter = new THREE.Vector3(0, 0, 0).sub(particle).multiplyScalar(0.01);
+    vel[i3] += toCenter.x;
+    vel[i3 + 1] += toCenter.y;
+    vel[i3 + 2] += toCenter.z;
+  }
+
+  // 位置更新と減衰
+  pos[i3] += vel[i3];
+  pos[i3 + 1] += vel[i3 + 1];
+  pos[i3 + 2] += vel[i3 + 2];
+  vel[i3] *= 0.95;
+  vel[i3 + 1] *= 0.95;
+  vel[i3 + 2] *= 0.95;
+
+  // フェードアウト
+  opa[i] *= 0.99;
+
+  // 👇 完全に消えたらリセット（ここで初期化）
+  if (opa[i] < 0.05) {
+    const theta = Math.acos(2 * Math.random() - 1);
+    const phi = 2 * Math.PI * Math.random();
+    const x = radius * Math.sin(theta) * Math.cos(phi);
+    const y = radius * Math.sin(theta) * Math.sin(phi);
+    const z = radius * Math.cos(theta);
+    pos[i3] = x;
+    pos[i3 + 1] = y;
+    pos[i3 + 2] = z;
+    opa[i] = Math.random();
+    vel[i3] = vel[i3 + 1] = vel[i3 + 2] = 0;
+  }
 }
-
-      pos[i3] += vel[i3];
-      pos[i3 + 1] += vel[i3 + 1];
-      pos[i3 + 2] += vel[i3 + 2];
-
-      vel[i3] *= 0.95;
-      vel[i3 + 1] *= 0.95;
-      vel[i3 + 2] *= 0.95;
-
-      opa[i] *= 0.99;
-
-      if (opa[i] < 0.05) {
-        const theta = Math.acos(2 * Math.random() - 1);
-        const phi = 2 * Math.PI * Math.random();
-        const x = radius * Math.sin(theta) * Math.cos(phi);
-        const y = radius * Math.sin(theta) * Math.sin(phi);
-        const z = radius * Math.cos(theta);
-        pos[i3] = x;
-        pos[i3 + 1] = y;
-        pos[i3 + 2] = z;
-        opa[i] = Math.random();
-        vel[i3] = vel[i3 + 1] = vel[i3 + 2] = 0;
-      }
-    }
 
     pointsRef.current.geometry.attributes.position.needsUpdate = true;
     pointsRef.current.geometry.attributes.opacity.needsUpdate = true;

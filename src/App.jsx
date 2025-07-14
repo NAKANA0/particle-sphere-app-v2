@@ -52,6 +52,10 @@ function ParticleSphere() {
    for (let i = 0; i < count; i++) {
   const i3 = i * 3;
   const particle = new THREE.Vector3(pos[i3], pos[i3 + 1], pos[i3 + 2]);
+  const vx = vel[i3];
+  const vy = vel[i3 + 1];
+  const vz = vel[i3 + 2];
+  const speed = Math.sqrt(vx * vx + vy * vy + vz * vz);
   const dist = particle.distanceTo(mousePos);
 
   // 弾く処理（近づいたら反発）
@@ -63,13 +67,19 @@ function ParticleSphere() {
     vel[i3 + 2] += dir.z * force;
   }
 
-  // 👇 中央への吸引（透明度が下がった粒子にのみ）
-  if (opa[i] < 0.3) {
-    const toCenter = new THREE.Vector3(0, 0, 0).sub(particle).multiplyScalar(0.01);
-    vel[i3] += toCenter.x;
-    vel[i3 + 1] += toCenter.y;
-    vel[i3 + 2] += toCenter.z;
-  }
+ // 条件：動きが止まりかけており、かつ透明度が下がってきたら
+if (opa[i] < 0.3 && speed < 0.02) {
+  const toCenter = new THREE.Vector3(0, 0, 0).sub(particle).multiplyScalar(0.001);
+  vel[i3] += toCenter.x;
+  vel[i3 + 1] += toCenter.y;
+  vel[i3 + 2] += toCenter.z;
+
+  // 吸引中はゆっくり透明に
+  opa[i] *= 0.997;
+} else {
+  // 通常フェード
+  opa[i] *= 0.99;
+}
 
   // 位置更新と減衰
   pos[i3] += vel[i3];

@@ -12,6 +12,8 @@ function ParticleSphere() {
   const count = 850;
   const radius = 2;
 
+  const hasBurst = useRef(new Array(count).fill(false));
+
   const { positions, opacities, velocities } = useMemo(() => {
     const pos = [];
     const opa = [];
@@ -65,10 +67,11 @@ function ParticleSphere() {
     vel[i3] += dir.x * force;
     vel[i3 + 1] += dir.y * force;
     vel[i3 + 2] += dir.z * force;
+    hasBurst[i] = true; // ← マウスによって弾けた
   }
 
  // 条件：動きが止まりかけており、かつ透明度が下がってきたら
-if (opa[i] < 0.3 && speed < 0.02) {
+if (hasBurst[i] && opa[i] < 0.3 && speed < 0.02) {
   const toCenter = new THREE.Vector3(0, 0, 0).sub(particle).multiplyScalar(0.001);
   vel[i3] += toCenter.x;
   vel[i3 + 1] += toCenter.y;
@@ -104,6 +107,7 @@ if (opa[i] < 0.3 && speed < 0.02) {
     pos[i3 + 2] = z;
     opa[i] = Math.random();
     vel[i3] = vel[i3 + 1] = vel[i3 + 2] = 0;
+    hasBurst.current[i] = false; // ← リセット処理をここに追加！
   }
 }
 

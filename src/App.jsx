@@ -63,7 +63,7 @@ function ParticleSphere() {
   // 弾く処理（近づいたら反発）
   if (dist < 1.2) {
     const dir = particle.clone().sub(mousePos).normalize();
-    const force = 0.15 / (dist * dist + 0.2);
+    const force = 0.08 / (dist * dist + 0.2);
     vel[i3] += dir.x * force;
     vel[i3 + 1] += dir.y * force;
     vel[i3 + 2] += dir.z * force;
@@ -88,9 +88,9 @@ if (hasBurst.current[i] && opa[i] < 0.3 && speed < 0.02) {
   pos[i3] += vel[i3];
   pos[i3 + 1] += vel[i3 + 1];
   pos[i3 + 2] += vel[i3 + 2];
-  vel[i3] *= 0.95;
-  vel[i3 + 1] *= 0.95;
-  vel[i3 + 2] *= 0.95;
+  vel[i3] *= 0.90;
+  vel[i3 + 1] *= 0.90;
+  vel[i3 + 2] *= 0.90;
 
   // フェードアウト
   opa[i] *= 0.99;

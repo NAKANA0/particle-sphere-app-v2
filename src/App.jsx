@@ -187,7 +187,7 @@ export default function App() {
     <Canvas
   camera={{ position: [0, 0, 6], fov: 75 }}
   gl={{ alpha: true }}
-  style={{ background: 'transparent' }} 
+  style={{ width: '100vw', height: '100svh', background: 'transparent' }} 
 >
 
       

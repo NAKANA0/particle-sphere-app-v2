@@ -71,7 +71,7 @@ function ParticleSphere() {
   }
 
  // 条件：動きが止まりかけており、かつ透明度が下がってきたら
-if (hasBurst[i] && opa[i] < 0.3 && speed < 0.02) {
+if (hasBurst.current[i] && opa[i] < 0.3 && speed < 0.02) {
   const toCenter = new THREE.Vector3(0, 0, 0).sub(particle).multiplyScalar(0.001);
   vel[i3] += toCenter.x;
   vel[i3 + 1] += toCenter.y;
@@ -107,7 +107,7 @@ if (hasBurst[i] && opa[i] < 0.3 && speed < 0.02) {
     pos[i3 + 2] = z;
     opa[i] = Math.random();
     vel[i3] = vel[i3 + 1] = vel[i3 + 2] = 0;
-    hasBurst.current[i] = false; // ← リセット処理をここに追加！
+    hasBurst.current[i] = false;
   }
 }
 

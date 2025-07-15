@@ -240,20 +240,7 @@ export default function App() {
       ></div>
 
     
-      {/* 下35%：スクロールのみ */}
-<div
-  style={{
-    position: 'absolute',
-    bottom: 0,
-    height: '35vh',
-    width: '100%',
-    overflowY: 'scroll',
-    pointerEvents: 'auto',
-    zIndex: 2,
-  }}
->
-  <div style={{ height: '200vh' }}></div>
-</div>
+
 
     </div>
   );

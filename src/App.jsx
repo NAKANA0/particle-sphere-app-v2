@@ -157,7 +157,7 @@ useEffect(() => {
 
 
   const uniforms = useMemo(() => ({
-    size: { value: 6.0 },
+    size: { value: 10.0 },
   }), []);
 
   const vertexShader = `

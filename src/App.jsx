@@ -234,24 +234,27 @@ export default function App() {
           top: 0,
           height: '65vh',
           width: '100%',
-          pointerEvents: 'auto',
+          pointerEvents: 'none',
           zIndex: 1,
         }}
       ></div>
 
-      {/* 下35%：スクロール可能領域 */}
-      <div
-        style={{
-          position: 'absolute',
-          bottom: 0,
-          height: '35vh',
-          width: '100%',
-          overflowY: 'scroll',
-          zIndex: 2,
-        }}
-      >
-        <div style={{ height: '200vh' }}></div>
-      </div>
+    
+      {/* 下35%：スクロールのみ */}
+<div
+  style={{
+    position: 'absolute',
+    bottom: 0,
+    height: '35vh',
+    width: '100%',
+    overflowY: 'scroll',
+    pointerEvents: 'auto',
+    zIndex: 2,
+  }}
+>
+  <div style={{ height: '200vh' }}></div>
+</div>
+
     </div>
   );
 }

@@ -243,7 +243,7 @@ export default function App() {
           width: '100vw',
           height: '100vh',
           zIndex: 0,
-          pointerEvents: 'none', // ← OrbitControlsがないと無効
+          pointerEvents: 'auto', // ← OrbitControlsがないと無効
         }}
       >
         <ParticleSphere />

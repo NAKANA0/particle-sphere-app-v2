@@ -220,37 +220,26 @@ export default function App() {
           width: '100vw',
           height: '100vh',
           zIndex: 0,
-          pointerEvents: 'none', // デフォルトは無効にしておく
+          pointerEvents: 'auto', // ← ここを auto にすることで OrbitControls 有効化
         }}
       >
         <ParticleSphere />
         <OrbitControls enableZoom={false} enablePan={false} />
       </Canvas>
 
-      {/* 上65%：回転可能 */}
-      <div
-        style={{
-          position: 'absolute',
-          top: 0,
-          height: '65vh',
-          width: '100%',
-          pointerEvents: 'auto', // ← 回転を有効にする
-          zIndex: 1,
-        }}
-      />
-
-      {/* 下35%：回転無効 */}
+      {/* 下35%：回転操作を無効にするブロック */}
       <div
         style={{
           position: 'absolute',
           bottom: 0,
           height: '35vh',
           width: '100%',
-          pointerEvents: 'none', // ← 操作無効化
+          pointerEvents: 'none', // ← このエリアでは回転操作を受け付けない
           zIndex: 1,
         }}
       />
     </div>
   );
 }
+
 

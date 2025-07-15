@@ -225,7 +225,10 @@ export default function App() {
         }}
       >
         <ParticleSphere />
-        <OrbitControls enableZoom={false} />
+      <OrbitControls
+  enableZoom={false}
+  enablePan={false}  // ← 任意：横に動かせないようにする
+/>
       </Canvas>
 
       {/* スクロールコンテンツ本体 */}

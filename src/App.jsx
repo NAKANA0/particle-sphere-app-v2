@@ -209,8 +209,7 @@ useEffect(() => {
 
 export default function App() {
   return (
-    <div style={{ width: '100vw', minHeight: '200vh', position: 'relative' }}>
-      {/* 背景Canvas：全画面に固定、背面表示 */}
+    <div style={{ width: '100vw', height: '100vh', position: 'relative' }}>
       <Canvas
         camera={{ position: [0, 0, 6], fov: 75 }}
         gl={{ alpha: true }}
@@ -221,19 +220,36 @@ export default function App() {
           width: '100vw',
           height: '100vh',
           zIndex: 0,
-          pointerEvents: 'auto', // 粒子を操作できる
+          pointerEvents: 'auto',
         }}
       >
         <ParticleSphere />
-      <OrbitControls
-  enableZoom={false}
-  enablePan={false}  // ← 任意：横に動かせないようにする
-/>
+        <OrbitControls enableZoom={false} enablePan={false} />
       </Canvas>
 
-      {/* スクロールコンテンツ本体 */}
-      <div style={{ position: 'relative', zIndex: 1 }}>
-        {/* この中は空でOK、スクロール可能な空間を作るだけ */}
+      {/* 上65%：回転操作領域 */}
+      <div
+        style={{
+          position: 'absolute',
+          top: 0,
+          height: '65vh',
+          width: '100%',
+          pointerEvents: 'auto',
+          zIndex: 1,
+        }}
+      ></div>
+
+      {/* 下35%：スクロール可能領域 */}
+      <div
+        style={{
+          position: 'absolute',
+          bottom: 0,
+          height: '35vh',
+          width: '100%',
+          overflowY: 'scroll',
+          zIndex: 2,
+        }}
+      >
         <div style={{ height: '200vh' }}></div>
       </div>
     </div>

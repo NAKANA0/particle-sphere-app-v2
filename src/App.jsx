@@ -209,41 +209,29 @@ useEffect(() => {
 
 export default function App() {
   return (
-    <div style={{ position: 'relative', width: '100vw', height: '100vh', overflow: 'hidden' }}>
-      {/* 全画面 Canvas */}
+    <div style={{ width: '100vw', minHeight: '200vh', position: 'relative' }}>
+      {/* 背景Canvas：全画面に固定、背面表示 */}
       <Canvas
         camera={{ position: [0, 0, 6], fov: 75 }}
         gl={{ alpha: true }}
         style={{
-          position: 'absolute',
+          position: 'fixed',
           top: 0,
           left: 0,
           width: '100vw',
           height: '100vh',
           zIndex: 0,
+          pointerEvents: 'auto', // 粒子を操作できる
         }}
       >
         <ParticleSphere />
         <OrbitControls enableZoom={false} />
       </Canvas>
 
-      {/* 画面下35%のスクロール可能エリア */}
-      <div
-        style={{
-          position: 'absolute',
-          bottom: 0,
-          width: '100%',
-          height: '35vh',
-          overflowY: 'scroll',
-          background: 'rgba(255, 255, 255, 0.9)',
-          zIndex: 1,
-        }}
-      >
-        <div style={{ padding: '1rem', minHeight: '200vh' }}>
-          <h1 style={{ color: '#203744' }}>スクロール可能なエリア</h1>
-          <p>この下にスクロールして球体に影響を与える仕組みが追加できます。</p>
-          <p>...</p>
-        </div>
+      {/* スクロールコンテンツ本体 */}
+      <div style={{ position: 'relative', zIndex: 1 }}>
+        {/* この中は空でOK、スクロール可能な空間を作るだけ */}
+        <div style={{ height: '200vh' }}></div>
       </div>
     </div>
   );

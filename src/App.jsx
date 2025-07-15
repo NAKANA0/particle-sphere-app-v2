@@ -234,7 +234,7 @@ export default function App() {
           top: 0,
           height: '65vh',
           width: '100%',
-          pointerEvents: 'auto', // ← 回転を有効にする
+          pointerEvents: 'none', // ← 回転を有効にする
           zIndex: 1,
         }}
       />

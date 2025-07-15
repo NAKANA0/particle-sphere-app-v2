@@ -208,8 +208,31 @@ useEffect(() => {
 }
 
 export default function App() {
+  const controlRef = useRef();
+  const controlAreaRef = useRef();
+
+  useEffect(() => {
+    if (controlRef.current && controlAreaRef.current) {
+      controlRef.current.domElement = controlAreaRef.current;
+    }
+  }, []);
+
   return (
     <div style={{ width: '100vw', height: '100vh', position: 'relative' }}>
+      {/* 上65%：回転操作を通す透明レイヤー */}
+      <div
+        ref={controlAreaRef}
+        style={{
+          position: 'absolute',
+          top: 0,
+          width: '100%',
+          height: '65vh',
+          zIndex: 2,
+          pointerEvents: 'auto', // ← ここが回転を許可するエリア
+        }}
+      />
+
+      {/* Canvas は操作を受け付けないが描画される */}
       <Canvas
         camera={{ position: [0, 0, 6], fov: 75 }}
         gl={{ alpha: true }}
@@ -220,24 +243,16 @@ export default function App() {
           width: '100vw',
           height: '100vh',
           zIndex: 0,
-          pointerEvents: 'auto', // ← ここを auto にすることで OrbitControls 有効化
+          pointerEvents: 'none', // ← OrbitControlsがないと無効
         }}
       >
         <ParticleSphere />
-        <OrbitControls enableZoom={false} enablePan={false} />
+        <OrbitControls
+          ref={controlRef}
+          enableZoom={false}
+          enablePan={false}
+        />
       </Canvas>
-
-      {/* 下35%：回転操作を無効にするブロック */}
-      <div
-        style={{
-          position: 'absolute',
-          bottom: 0,
-          height: '35vh',
-          width: '100%',
-          pointerEvents: 'none', // ← このエリアでは回転操作を受け付けない
-          zIndex: 1,
-        }}
-      />
     </div>
   );
 }

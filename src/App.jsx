@@ -10,7 +10,7 @@ function ParticleSphere() {
   const { size, camera } = useThree();
 
   const count = 850;
-  const radius = 6;
+  const radius = 5;
 
   const hasBurst = useRef(new Array(count).fill(false));
 
@@ -61,7 +61,7 @@ function ParticleSphere() {
   const dist = particle.distanceTo(mousePos);
 
   // 弾く処理（近づいたら反発）
-  if (dist < 1.2) {
+  if (dist < 2.0) {
     const dir = particle.clone().sub(mousePos).normalize();
     const force = 0.08 / (dist * dist + 0.2);
     vel[i3] += dir.x * force;

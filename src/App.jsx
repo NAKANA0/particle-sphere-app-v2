@@ -212,7 +212,7 @@ export default function App() {
     <div style={{ width: '100vw', height: '100vh', position: 'relative' }}>
       {/* Canvas 全体は回転操作可能 */}
       <Canvas
-        camera={{ position: [0, 0, 6], fov: 75 }}
+        camera={{ position: [0, 0, 8], fov: 75 }}
         gl={{ alpha: true }}
         style={{
           position: 'fixed',

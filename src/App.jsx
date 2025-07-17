@@ -10,7 +10,7 @@ function ParticleSphere() {
   const { size, camera } = useThree();
 
   const count = 850;
-  const radius = 4;
+  const radius = 4.5;
 
   const hasBurst = useRef(new Array(count).fill(false));
 

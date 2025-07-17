@@ -61,7 +61,7 @@ function ParticleSphere() {
   const dist = particle.distanceTo(mousePos);
 
   // 弾く処理（近づいたら反発）
-  if (dist < 1.5) {
+  if (dist < 1.8) {
     const dir = particle.clone().sub(mousePos).normalize();
     const force = 0.08 / (dist * dist + 0.2);
     vel[i3] += dir.x * force;

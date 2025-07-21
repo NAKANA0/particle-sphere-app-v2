@@ -55,6 +55,10 @@ function ParticleSphere() {
     vector.unproject(camera);
     const dir = vector.sub(camera.position).normalize();
     const mousePos = camera.position.clone().add(dir.multiplyScalar(4));
+    // 👇 グローバルなマウス位置を「回転後の球体グループのローカル座標」に変換
+if (groupRef.current) {
+  groupRef.current.worldToLocal(mousePos);
+}
 
    for (let i = 0; i < count; i++) {
   const i3 = i * 3;

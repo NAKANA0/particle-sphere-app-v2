@@ -5,6 +5,7 @@ import { useRef, useMemo, useEffect } from 'react';
 import * as THREE from 'three';
 
 function ParticleSphere() {
+  const groupRef = useRef();
   const pointsRef = useRef();
   const mouseRef = useRef(new THREE.Vector2(-999, -999));
   const { size, camera } = useThree();
@@ -38,6 +39,10 @@ function ParticleSphere() {
   }, []);
 
   useFrame(() => {
+        // 🌀 地球のようにゆっくり自転（回転速度はここで調整）
+    if (groupRef.current) {
+      groupRef.current.rotation.y += 0.0005;
+    }
     const pos = pointsRef.current.geometry.attributes.position.array;
     const opa = pointsRef.current.geometry.attributes.opacity.array;
     const vel = velocities;
@@ -181,29 +186,34 @@ useEffect(() => {
     }
   `;
 
-  return (
-    <points ref={pointsRef}>
-      <bufferGeometry>
-        <bufferAttribute
-          attach="attributes-position"
-          array={positions}
-          count={positions.length / 3}
-          itemSize={3}
+   return (
+    <group
+      ref={groupRef}
+      rotation={[0, 0, THREE.MathUtils.degToRad(15)]} // ← 地軸の傾き（Z軸に15度）
+    >
+      <points ref={pointsRef}>
+        <bufferGeometry>
+          <bufferAttribute
+            attach="attributes-position"
+            array={positions}
+            count={positions.length / 3}
+            itemSize={3}
+          />
+          <bufferAttribute
+            attach="attributes-opacity"
+            array={opacities}
+            count={opacities.length}
+            itemSize={1}
+          />
+        </bufferGeometry>
+        <shaderMaterial
+          vertexShader={vertexShader}
+          fragmentShader={fragmentShader}
+          transparent={true}
+          uniforms={uniforms}
         />
-        <bufferAttribute
-          attach="attributes-opacity"
-          array={opacities}
-          count={opacities.length}
-          itemSize={1}
-        />
-      </bufferGeometry>
-      <shaderMaterial
-        vertexShader={vertexShader}
-        fragmentShader={fragmentShader}
-        transparent={true}
-        uniforms={uniforms}
-      />
-    </points>
+      </points>
+    </group>
   );
 }
 
